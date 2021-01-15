@@ -1,0 +1,29 @@
+/* ResetCss */
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+	font-family: 'Spoqa Han Sans Neo', 'sans-serif';
+}
+
+a {
+	text-decoration: none;
+	color: inherit;
+}
+
+button {
+	cursor: pointer;
+}
+
+button{
+	font-size: 16px;
+	font-family: 'Spoqa Han Sans Neo', 'sans-serif';
+	border: none;
+	background-color: #fff;
+}
+
+button:focus,
+button:active{
+	outline: none;
+	box-shadow: none;
+}

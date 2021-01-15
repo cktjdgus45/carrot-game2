@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://kit.fontawesome.com/920f3667b2.js" crossorigin="anonymous"></script>
+    <title>Carrot Game</title>
+</head>
+
+<body>
+    <section class="game">
+        <header class="game-controllers">
+            <button type="button" class="game-play">
+                <i class="fas fa-play"></i>
+            </button>
+            <div class="game-timer">
+                <span class="game-time">0:0</span>
+            </div>
+            <div class="game-score-board">
+                <span class="game-score">7</span>
+            </div>
+        </header>
+        <main class="game-field">
+            <div class="bug"></div>
+            <div class="carrot"></div>
+            <aside class="game-end">
+                <button class="game-reset">
+                    <i class="fas fa-undo"></i>
+                </button>
+                <span class="game-end-letter">
+                    Win💣
+                </span>
+            </aside>
+        </main>
+    </section>
+    <script src="./app.js"></script>
+</body>
+
+</html>
