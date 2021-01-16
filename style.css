@@ -1,3 +1,8 @@
+:root{
+	--body-bg-color:black;
+	--btn-bg-color:#EFD3A4;
+	--game-score-color: #EA886D;
+}
 /* ResetCss */
 
 * {
@@ -19,11 +24,121 @@ button{
 	font-size: 16px;
 	font-family: 'Spoqa Han Sans Neo', 'sans-serif';
 	border: none;
-	background-color: #fff;
+	background-color:white ;
 }
 
 button:focus,
 button:active{
 	outline: none;
 	box-shadow: none;
+}
+/* body */
+body{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	background-color:var(--body-bg-color);
+}
+/* Section */
+.game{
+	width: 800px;
+	height: 500px;
+	background-color:white;
+	border-radius: 20px;
+	background-image: url(./assets/img/background.png);
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+/* header */
+.game-controllers{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-top: 10px;
+	height: 50%;
+}
+.game-play{
+	width: 50px;
+	height: 50px;
+	background-color: var(--btn-bg-color);
+	border: 4px solid black;
+	border-radius: 8px;
+	font-size: 20px;
+}
+.game-timer{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 120px;
+	height: 40px;
+	background-color: white;
+	border: 4px solid black;
+	border-radius: 8px;
+	font-size: 25px;
+	margin: 5px 0px;
+}
+.game-score-board{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 50px;
+	height: 50px;
+	border: 4px solid black;
+	border-radius: 25px;
+	background-color: var(--game-score-color);
+	color: white;
+	font-size: 30px;
+	text-align: center;
+}
+/* main */
+.game-field{
+	position: relative;
+	width: 100%;
+	height: 50%;
+}
+
+.game-end{
+	position: absolute;
+	top: 20px;
+	left:200px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 400px;
+	height: 120px;
+	background-color: rgba(0, 0, 0, 0.5);
+	border-radius: 15px;
+}
+.game-reset{
+	width: 50px;
+	height: 50px;
+	border: 2px solid black;
+	border-radius: 5px;
+	background-color: var(--btn-bg-color);
+	font-size: 22px;
+}
+.game-end-letter{
+	font-size: 25px;
+	color:white;
+}
+.carrot,.bug{
+	position: absolute;
+	/* JS에서 랜덤배치에서 사용. */
+	left: 300px;  
+	top: 20px;
+	width: 60px;
+	height: 60px;
+	background-size: cover;
+}
+
+
+/* showing */
+
+.showing{
+	display: block;
+}
+.unshowing{
+	display: none;
 }
