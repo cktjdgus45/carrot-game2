@@ -4,60 +4,67 @@ const gameEndNotice = document.querySelector(".game-end");
 const replayBtn = document.querySelector(".game-reset");
 const noticeLetter = document.querySelector(".game-end-letter");
 const gameField = document.querySelector(".game-field");
+const gameScore = document.querySelector(".game-score");
 
-const CARROT_COUNT = 10;
-const BUG_COUNT = 7;
+let CARROT_COUNT = 10;
+let BUG_COUNT = 7;
 let GAME_TIME = 10;
 let timer = null;
 let playing = false;
+const BG_SOUND = new Audio('./assets/sound/bg.mp3');
 
-// 2.게임이 시작되면 /++/ 랜덤적으로 벌레 7개, 당근이 10개씩 배치되고
-//   당근의 개수가 10개로 세팅된다.
 // 3. 벌레를 클릭하거나//당근을 시간내에 모두먹거나 게임엔드창이뜬다.
 
 
 //game Function 
 function gameStart() {
+    BG_SOUND.play();
+    placeItems();
     if (!playing) {
-        showplay();
-        timer = setInterval(gameLoop, 1000);
         playing = true;
-        unShowReplay();
+        timer = setInterval(gameLoop, 1000);
         playBtn.innerHTML = `<i class="fas fa-stop"></i>`;
+        showScore();
+        showplay();
+        unShowReplay();
     } else {
         playBtn.innerHTML = `<i class="fas fa-play"></i>`;
-        clearInterval(timer);
-        gameReset();
-        showReplay();
-        unShowplay();
         noticeWhenStop();
+        gameEnd();
+    }
+
+}
+function gameLoop() {
+    timeSpan.innerHTML = `0:${GAME_TIME}`;
+    --GAME_TIME;
+    if (GAME_TIME < 0) {
+        gameEnd();
     }
 }
 
-function gameLoop() {
-    timeSpan.innerHTML = `0:${GAME_TIME}`;
-    GAME_TIME--;
-    if (GAME_TIME < 0) {
-        clearInterval(timer);
-        gameReset();
-        showReplay();
-        unShowplay();
-        noticeWhenLose();
-    }
+function gameEnd() {
+    clearInterval(timer);
+    unShowplay();
+    showReplay();
+    gameReset();
+    BG_SOUND.pause();
+    BG_SOUND.currentTime = 0;
 }
 
 function gameReset() {
+    CARROT_COUNT = 10;
+    BUG_COUNT = 7;
     GAME_TIME = 10;
     playing = false;
     playBtn.innerHTML = `<i class="fas fa-play"></i>`;
+    clearField();
 }
 
-// create game Items
+// create delete game Items
 
 
 function createItems(itemName, count) {
     const coords = gameField.getBoundingClientRect();
-    console.log(gameField);
     const itemArr = [];
     for (let i = 0; i < count; i++) {
         const maxX = coords.right - coords.left;
@@ -93,6 +100,14 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
 }
 
+function clearField() {
+    gameField.childNodes.forEach((item) => {
+        if (item.nodeName == "IMG") {
+            item.setAttribute("class", "unshowing");
+        }
+    })
+}
+
 // show? unshow?
 function showReplay() {
     gameEndNotice.classList.remove("unshowing");
@@ -120,13 +135,38 @@ function noticeWhenLose() {
 }
 
 function noticeWhenWin() {
+    let audio = new Audio('./assets/sound/game_win.mp3');
+    audio.play();
     noticeLetter.innerHTML = 'You Win !! 🎈';
+}
+
+function onFieldClicked(event) {
+    if (event.target.className == "bug") {
+        let audio = new Audio('./assets/sound/bug_pull.mp3');
+        audio.play();
+        noticeWhenLose();
+        gameEnd();
+    } else if (event.target.className == "carrot") {
+        let audio = new Audio('./assets/sound/carrot_pull.mp3');
+        audio.play();
+        gameField.removeChild(event.target);
+        CARROT_COUNT--;
+        showScore();
+    }
+    if (CARROT_COUNT == 0) {
+        noticeWhenWin();
+        gameEnd();
+    }
+}
+
+function showScore() {
+    gameScore.innerHTML = `${CARROT_COUNT}`;
 }
 
 function init() {
     playBtn.addEventListener("click", gameStart);
     replayBtn.addEventListener("click", gameStart);
+    gameField.addEventListener("click", onFieldClicked);
 }
 
-placeItems();
 init();

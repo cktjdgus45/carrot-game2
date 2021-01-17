@@ -131,7 +131,12 @@ body{
 	width: 60px;
 	height: 60px;
 	background-size: cover;
+	cursor: pointer;
 }
+.carrot:hover,.bug:hover{
+	transform: scale(1.1,1.1);
+}
+
 
 
 /* showing */
