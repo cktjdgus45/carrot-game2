@@ -1,8 +1,10 @@
+'use strict'
+
+import Notice from './notice.js';
+import * as sound from './sound.js';
+
 const playBtn = document.querySelector(".game-play");
 const timeSpan = document.querySelector(".game-time");
-const gameEndNotice = document.querySelector(".game-end");
-const replayBtn = document.querySelector(".game-reset");
-const noticeLetter = document.querySelector(".game-end-letter");
 const gameField = document.querySelector(".game-field");
 const gameScore = document.querySelector(".game-score");
 
@@ -11,14 +13,12 @@ let BUG_COUNT = 7;
 let GAME_TIME = 10;
 let timer = null;
 let playing = false;
-const BG_SOUND = new Audio('./assets/sound/bg.mp3');
 
-// 3. 벌레를 클릭하거나//당근을 시간내에 모두먹거나 게임엔드창이뜬다.
-
+const gameFinishNotice = new Notice();
 
 //game Function 
 function gameStart() {
-    BG_SOUND.play();
+    sound.playBg();
     placeItems();
     if (!playing) {
         playing = true;
@@ -26,10 +26,10 @@ function gameStart() {
         playBtn.innerHTML = `<i class="fas fa-stop"></i>`;
         showScore();
         showplay();
-        unShowReplay();
+        gameFinishNotice.hide();
     } else {
         playBtn.innerHTML = `<i class="fas fa-play"></i>`;
-        noticeWhenStop();
+        gameFinishNotice.noticeWhenStop();
         gameEnd();
     }
 
@@ -38,6 +38,7 @@ function gameLoop() {
     timeSpan.innerHTML = `0:${GAME_TIME}`;
     --GAME_TIME;
     if (GAME_TIME < 0) {
+        gameFinishNotice.noticeWhenLose();
         gameEnd();
     }
 }
@@ -45,10 +46,9 @@ function gameLoop() {
 function gameEnd() {
     clearInterval(timer);
     unShowplay();
-    showReplay();
+    gameFinishNotice.show();
     gameReset();
-    BG_SOUND.pause();
-    BG_SOUND.currentTime = 0;
+    sound.stopBg();
 }
 
 function gameReset() {
@@ -56,7 +56,6 @@ function gameReset() {
     BUG_COUNT = 7;
     GAME_TIME = 10;
     playing = false;
-    playBtn.innerHTML = `<i class="fas fa-play"></i>`;
     clearField();
 }
 
@@ -109,13 +108,6 @@ function clearField() {
 }
 
 // show? unshow?
-function showReplay() {
-    gameEndNotice.classList.remove("unshowing");
-}
-
-function unShowReplay() {
-    gameEndNotice.classList.add("unshowing");
-}
 
 function showplay() {
     playBtn.classList.remove("unshowing");
@@ -125,36 +117,19 @@ function unShowplay() {
     playBtn.classList.add("unshowing");
 }
 
-//notice Letter
-function noticeWhenStop() {
-    noticeLetter.innerHTML = 'Replay❓';
-}
-
-function noticeWhenLose() {
-    noticeLetter.innerHTML = 'You Lose !! 💣';
-}
-
-function noticeWhenWin() {
-    let audio = new Audio('./assets/sound/game_win.mp3');
-    audio.play();
-    noticeLetter.innerHTML = 'You Win !! 🎈';
-}
-
 function onFieldClicked(event) {
     if (event.target.className == "bug") {
-        let audio = new Audio('./assets/sound/bug_pull.mp3');
-        audio.play();
-        noticeWhenLose();
+        sound.playBug();
+        gameFinishNotice.noticeWhenLose();
         gameEnd();
     } else if (event.target.className == "carrot") {
-        let audio = new Audio('./assets/sound/carrot_pull.mp3');
-        audio.play();
+        sound.playCarrot();
         gameField.removeChild(event.target);
         CARROT_COUNT--;
         showScore();
     }
     if (CARROT_COUNT == 0) {
-        noticeWhenWin();
+        gameFinishNotice.noticeWhenWin();
         gameEnd();
     }
 }
@@ -164,8 +139,11 @@ function showScore() {
 }
 
 function init() {
+    gameFinishNotice.hide();
     playBtn.addEventListener("click", gameStart);
-    replayBtn.addEventListener("click", gameStart);
+    gameFinishNotice.setClickListener(() => {
+        gameStart();
+    })
     gameField.addEventListener("click", onFieldClicked);
 }
 
